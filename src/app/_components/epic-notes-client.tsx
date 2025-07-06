@@ -13,12 +13,6 @@ const noteSchema = z.object({
   content: z.string().min(1, "Note cannot be empty.").max(280, "Note is too long."),
 });
 
-const DollarIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-        <path d="M152,120H136V56h8a32,32,0,0,1,32,32,8,8,0,0,0,16,0,48.05,48.05,0,0,0-48-48h-8V24a8,8,0,0,0-16,0V40h-8a48,48,0,0,0,0,96h8v64H104a32,32,0,0,1-32-32,8,8,0,0,0-16,0,48.05,48.05,0,0,0,48,48h16v16a8,8,0,0,0,16,0V216h16a48,48,0,0,0,0-96Zm-40,0a32,32,0,0,1,0-64h8v64Zm40,80H136V136h16a32,32,0,0,1,0,64Z"></path>
-    </svg>
-);
-
 export function EpicNotesClient() {
   const [notes, setNotes] = useLocalStorage<EpicNote[]>("epic-notes", []);
   const [isClient, setIsClient] = useState(false);
@@ -75,10 +69,7 @@ export function EpicNotesClient() {
           </div>
         )}
         {notes.map(note => (
-          <div key={note.id} className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2 border-b border-[#f0f4f2]">
-            <div className="text-[#111714] flex items-center justify-center rounded-lg bg-[#f0f4f2] shrink-0 size-12">
-              <DollarIcon />
-            </div>
+          <div key={note.id} className="flex items-center bg-white px-4 min-h-[72px] py-2 border-b border-[#f0f4f2]">
             <div className="flex flex-col justify-center overflow-hidden">
               <p className="text-[#111714] text-base font-medium leading-normal truncate">{note.content}</p>
               <p className="text-[#648771] text-sm font-normal leading-normal">{format(new Date(note.createdAt), 'yyyy-MM-dd')}</p>

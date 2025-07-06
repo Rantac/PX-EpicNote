@@ -5,20 +5,27 @@ import type { EpicNote } from "@/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
-import { X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const noteSchema = z.object({
   content: z.string().min(1, "Note cannot be empty.").max(280, "Note is too long."),
 });
 
+const DollarIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+        <path d="M152,120H136V56h8a32,32,0,0,1,32,32,8,8,0,0,0,16,0,48.05,48.05,0,0,0-48-48h-8V24a8,8,0,0,0-16,0V40h-8a48,48,0,0,0,0,96h8v64H104a32,32,0,0,1-32-32,8,8,0,0,0-16,0,48.05,48.05,0,0,0,48,48h16v16a8,8,0,0,0,16,0V216h16a48,48,0,0,0,0-96Zm-40,0a32,32,0,0,1,0-64h8v64Zm40,80H136V136h16a32,32,0,0,1,0,64Z"></path>
+    </svg>
+);
+
 export function EpicNotesClient() {
-  const [notes, setNotes, isHydrated] = useLocalStorage<EpicNote[]>("epic-notes", []);
+  const [notes, setNotes] = useLocalStorage<EpicNote[]>("epic-notes", []);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const form = useForm<z.infer<typeof noteSchema>>({
     resolver: zodResolver(noteSchema),
@@ -34,66 +41,50 @@ export function EpicNotesClient() {
     setNotes(prev => [newNote, ...prev]);
     form.reset();
   };
-
-  const deleteNote = (id: string) => {
-    setNotes(prev => prev.filter(note => note.id !== id));
-  };
-
-  if (!isHydrated) {
-    return (
-        <div className="space-y-6">
-          <Skeleton className="h-10 w-full" />
-          <div className="space-y-4">
-            <Skeleton className="h-20 w-full" />
-            <Skeleton className="h-20 w-full" />
+  
+  if (!isClient) {
+      return (
+          <div className="px-4 max-w-[480px] mx-auto">
+              <Skeleton className="h-14 w-full mb-3" />
+              <div className="space-y-2">
+                  <Skeleton className="h-[72px] w-full" />
+                  <Skeleton className="h-[72px] w-full" />
+                  <Skeleton className="h-[72px] w-full" />
+              </div>
           </div>
-        </div>
-    );
+      )
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardContent className="p-4">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <FormField
-                control={form.control}
-                name="content"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input placeholder="What's on your mind?" {...field} autoComplete="off" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-      
-      <div className="space-y-4">
-        {notes.length === 0 ? (
-          <Card className="text-center py-10">
-            <CardContent>
-                <p className="text-muted-foreground">No epic notes yet. Add one!</p>
-            </CardContent>
-          </Card>
-        ) : (
-          notes.map(note => (
-            <Card key={note.id} className="group relative transition-all duration-300 ease-in-out hover:shadow-md">
-              <CardContent className="flex items-center justify-between p-4">
-                <p className="text-foreground pr-10">{note.content}</p>
-                <Button variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => deleteNote(note.id)}>
-                   <X className="h-4 w-4" />
-                   <span className="sr-only">Delete note</span>
-                </Button>
-              </CardContent>
-            </Card>
-          ))
+    <div>
+      <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3 mx-auto">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1">
+            <input
+              placeholder="Quick Fill Note"
+              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111714] focus:outline-0 focus:ring-0 border border-[#dce5df] bg-white focus:border-[#dce5df] h-14 placeholder:text-[#648771] p-[15px] text-base font-normal leading-normal"
+              {...form.register("content")}
+              autoComplete="off"
+            />
+        </form>
+      </div>
+
+      <div className="max-w-[480px] mx-auto">
+        {notes.length === 0 && (
+          <div className="text-center py-10 text-[#648771]">
+            <p>No epic notes yet. Add one!</p>
+          </div>
         )}
+        {notes.map(note => (
+          <div key={note.id} className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2 border-b border-[#f0f4f2]">
+            <div className="text-[#111714] flex items-center justify-center rounded-lg bg-[#f0f4f2] shrink-0 size-12">
+              <DollarIcon />
+            </div>
+            <div className="flex flex-col justify-center overflow-hidden">
+              <p className="text-[#111714] text-base font-medium leading-normal truncate">{note.content}</p>
+              <p className="text-[#648771] text-sm font-normal leading-normal">{format(new Date(note.createdAt), 'yyyy-MM-dd')}</p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -2,20 +2,31 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Notebook, BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+const DollarIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+        <path d="M116,80h4v40h-4a20,20,0,0,1,0-40Zm32,56H136v40h12a20,20,0,0,0,0-40Zm84-8A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-48,28a36,36,0,0,0-36-36H136V80h4a20,20,0,0,1,20,20,8,8,0,0,0,16,0,36,36,0,0,0-36-36h-4V56a8,8,0,0,0-16,0v8h-4a36,36,0,0,0,0,72h4v40h-8a20,20,0,0,1-20-20,8,8,0,0,0-16,0,36,36,0,0,0,36,36h8v8a8,8,0,0,0,16,0v-8h12A36,36,0,0,0,184,156Z"></path>
+    </svg>
+);
+
+const ChartIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+        <path d="M232,208a8,8,0,0,1-8,8H32a8,8,0,0,1-8-8V48a8,8,0,0,1,16,0v94.37L90.73,98a8,8,0,0,1,10.07-.38l58.81,44.11L218.73,90a8,8,0,1,1,10.54,12l-64,56a8,8,0,0,1-10.07.38L96.39,114.29,40,163.63V200H224A8,8,0,0,1,232,208Z"></path>
+    </svg>
+);
+
 const navItems = [
-  { href: "/", label: "Epic Notes", icon: Notebook },
-  { href: "/analysis", label: "Analysis", icon: BarChart3 },
+  { href: "/", label: "Epic Notes", icon: DollarIcon },
+  { href: "/analysis", label: "Analysis", icon: ChartIcon },
 ];
 
 export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-16 border-t bg-background/95 backdrop-blur-sm">
-        <nav className="mx-auto flex h-full max-w-md items-center justify-around">
+    <div className="max-w-[480px] mx-auto">
+        <nav className="flex gap-2 border-t border-[#f0f4f2] bg-white px-4 pt-2">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -23,13 +34,14 @@ export function BottomNav() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "flex h-full w-full flex-col items-center justify-center gap-1 transition-colors",
-                    isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                    "flex flex-1 flex-col items-center justify-end gap-1 rounded-full",
+                    isActive ? "text-[#111714]" : "text-[#648771]"
                   )}
                   aria-current={isActive ? "page" : undefined}
                 >
-                  <item.icon className="h-6 w-6" />
-                  <span className="text-xs font-medium">{item.label}</span>
+                  <div className="flex h-8 items-center justify-center">
+                    <item.icon />
+                  </div>
                 </Link>
               );
             })}

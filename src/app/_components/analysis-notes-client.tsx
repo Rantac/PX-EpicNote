@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import type { AnalysisNote } from "@/types";
 import { useForm } from "react-hook-form";
@@ -8,12 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format, startOfWeek } from 'date-fns';
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -34,9 +28,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, FileText } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent } from "@/components/ui/card";
 
 const analysisSchema = z.object({
   summary: z.string().min(10, "Summary must be at least 10 characters.").max(1000),
@@ -44,8 +37,13 @@ const analysisSchema = z.object({
 });
 
 export function AnalysisNotesClient() {
-  const [notes, setNotes, isHydrated] = useLocalStorage<AnalysisNote[]>("analysis-notes", []);
+  const [notes, setNotes] = useLocalStorage<AnalysisNote[]>("analysis-notes", []);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const form = useForm<z.infer<typeof analysisSchema>>({
     resolver: zodResolver(analysisSchema),
@@ -66,30 +64,29 @@ export function AnalysisNotesClient() {
     setIsDialogOpen(false);
   };
   
-  const deleteNote = (id: string) => {
-    setNotes(prev => prev.filter(note => note.id !== id));
-  };
-  
-  if (!isHydrated) {
+  if (!isClient) {
     return (
-      <div className="space-y-4">
-        <Skeleton className="h-14 w-full" />
-        <Skeleton className="h-14 w-full" />
-        <Skeleton className="h-14 w-full" />
-      </div>
+        <div className="px-4 max-w-[480px] mx-auto">
+            <Skeleton className="h-14 w-full my-3" />
+            <div className="space-y-2">
+                <Skeleton className="h-28 w-full" />
+                <Skeleton className="h-28 w-full" />
+                <Skeleton className="h-28 w-full" />
+            </div>
+        </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-[480px] mx-auto px-4 py-3">
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <Button className="w-full">
-            <Plus className="mr-2 h-4 w-4" />
+          <Button className="w-full h-14 rounded-xl bg-[#111714] text-white hover:bg-black text-base font-bold">
+            <Plus className="mr-2 h-5 w-5" />
             Add Weekly Analysis
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="bg-white">
           <DialogHeader>
             <DialogTitle>New Weekly Analysis</DialogTitle>
             <DialogDescription>
@@ -137,43 +134,34 @@ export function AnalysisNotesClient() {
         </DialogContent>
       </Dialog>
       
-      {notes.length === 0 ? (
-        <Card className="text-center py-10">
-            <CardContent>
-                <p className="text-muted-foreground">No analysis notes yet. Add your first one!</p>
-            </CardContent>
-        </Card>
-      ) : (
-        <Accordion type="single" collapsible className="w-full space-y-3">
+      <div className="mt-4">
+        {notes.length === 0 ? (
+          <div className="text-center py-10 text-[#648771]">
+            <p>No analysis notes yet. Add your first one!</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
             {notes.map(note => (
-            <AccordionItem value={note.id} key={note.id} className="border-b-0">
-              <Card className="overflow-hidden">
-                <AccordionTrigger className="hover:no-underline justify-between w-full p-4 bg-card">
-                    <span className="font-semibold text-left text-card-foreground">{note.weekOf}</span>
-                </AccordionTrigger>
-                <AccordionContent className="p-4 pt-0">
-                    <div className="space-y-4">
-                        <div>
-                            <h4 className="font-semibold text-sm mb-1 text-foreground">Summary</h4>
-                            <p className="text-sm text-muted-foreground whitespace-pre-wrap">{note.summary}</p>
-                        </div>
-                        <div>
-                            <h4 className="font-semibold text-sm mb-1 text-foreground">Mindset</h4>
-                            <p className="text-sm text-muted-foreground whitespace-pre-wrap">{note.mindset}</p>
-                        </div>
-                         <div className="flex justify-end pt-2 border-t">
-                            <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => deleteNote(note.id)}>
-                                <Trash2 className="h-4 w-4 mr-2" />
-                                Delete
-                            </Button>
-                        </div>
-                    </div>
-                </AccordionContent>
-              </Card>
-            </AccordionItem>
+            <div key={note.id} className="flex items-start gap-4 bg-white px-4 py-3 border border-[#f0f4f2] rounded-xl">
+              <div className="text-[#111714] flex items-center justify-center rounded-lg bg-[#f0f4f2] shrink-0 size-12 mt-1">
+                <FileText size={24} />
+              </div>
+              <div className="flex flex-col justify-center overflow-hidden w-full">
+                <h3 className="text-[#111714] text-base font-bold leading-normal">{note.weekOf}</h3>
+                <div className="mt-2">
+                    <h4 className="font-semibold text-sm mb-1 text-[#111714]">Summary</h4>
+                    <p className="text-sm text-[#648771] whitespace-pre-wrap">{note.summary}</p>
+                </div>
+                <div className="mt-2">
+                    <h4 className="font-semibold text-sm mb-1 text-[#111714]">Mindset</h4>
+                    <p className="text-sm text-[#648771] whitespace-pre-wrap">{note.mindset}</p>
+                </div>
+              </div>
+            </div>
             ))}
-        </Accordion>
-      )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

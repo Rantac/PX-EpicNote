@@ -2,12 +2,11 @@ import { AnalysisNotesClient } from '../_components/analysis-notes-client';
 
 export default function AnalysisPage() {
   return (
-    <div className="container mx-auto max-w-2xl p-4 sm:p-6">
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold font-headline text-foreground">Weekly Analysis</h1>
-        <p className="text-muted-foreground">Summaries and mindset for the week.</p>
-      </header>
+    <>
+      <div className="flex items-center bg-white p-4 pb-2 justify-center max-w-[480px] mx-auto">
+        <h2 className="text-[#111714] text-lg font-bold leading-tight tracking-[-0.015em] text-center">Weekly Analysis</h2>
+      </div>
       <AnalysisNotesClient />
-    </div>
+    </>
   );
 }

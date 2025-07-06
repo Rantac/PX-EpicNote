@@ -81,12 +81,12 @@ export function AnalysisNotesClient() {
     <div className="max-w-[480px] mx-auto px-4 py-3">
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <Button className="w-full h-14 rounded-xl bg-[#111714] text-white hover:bg-black text-base font-bold">
+          <Button className="w-full h-14 rounded-xl text-base font-bold">
             <Plus className="mr-2 h-5 w-5" />
             Add Weekly Analysis
           </Button>
         </DialogTrigger>
-        <DialogContent className="bg-white">
+        <DialogContent className="bg-background">
           <DialogHeader>
             <DialogTitle>New Weekly Analysis</DialogTitle>
             <DialogDescription>
@@ -136,25 +136,25 @@ export function AnalysisNotesClient() {
       
       <div className="mt-4">
         {notes.length === 0 ? (
-          <div className="text-center py-10 text-[#648771]">
+          <div className="text-center py-10 text-muted-foreground">
             <p>No analysis notes yet. Add your first one!</p>
           </div>
         ) : (
           <div className="space-y-2">
             {notes.map(note => (
-            <div key={note.id} className="flex items-start gap-4 bg-white px-4 py-3 border border-[#f0f4f2] rounded-xl">
-              <div className="text-[#111714] flex items-center justify-center rounded-lg bg-[#f0f4f2] shrink-0 size-12 mt-1">
+            <div key={note.id} className="flex items-start gap-4 bg-background px-4 py-3 border border-border rounded-xl">
+              <div className="text-foreground flex items-center justify-center rounded-lg bg-muted shrink-0 size-12 mt-1">
                 <FileText size={24} />
               </div>
               <div className="flex flex-col justify-center overflow-hidden w-full">
-                <h3 className="text-[#111714] text-base font-bold leading-normal">{note.weekOf}</h3>
+                <h3 className="text-foreground text-base font-bold leading-normal">{note.weekOf}</h3>
                 <div className="mt-2">
-                    <h4 className="font-semibold text-sm mb-1 text-[#111714]">Summary</h4>
-                    <p className="text-sm text-[#648771] whitespace-pre-wrap">{note.summary}</p>
+                    <h4 className="font-semibold text-sm mb-1 text-foreground">Summary</h4>
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">{note.summary}</p>
                 </div>
                 <div className="mt-2">
-                    <h4 className="font-semibold text-sm mb-1 text-[#111714]">Mindset</h4>
-                    <p className="text-sm text-[#648771] whitespace-pre-wrap">{note.mindset}</p>
+                    <h4 className="font-semibold text-sm mb-1 text-foreground">Mindset</h4>
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">{note.mindset}</p>
                 </div>
               </div>
             </div>

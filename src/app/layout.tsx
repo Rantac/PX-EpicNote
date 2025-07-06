@@ -21,14 +21,14 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       </head>
-      <body className="font-sans antialiased bg-[#F0F0F0] text-black">
-        <div className="relative size-full min-h-screen max-w-[480px] mx-auto bg-white">
-          <main className="pb-20">
+      <body className="font-sans antialiased bg-background text-foreground">
+        <div className="relative flex flex-col min-h-screen max-w-[480px] mx-auto bg-background">
+          <main className="flex-1 pb-16">
             {children}
           </main>
           <div className="fixed bottom-0 left-1/2 w-full max-w-[480px] -translate-x-1/2">
             <BottomNav />
-            <div className="h-5 bg-white"></div>
+            <div className="h-safe-bottom bg-background"></div>
           </div>
         </div>
         <Toaster />

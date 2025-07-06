@@ -55,7 +55,7 @@ export function EpicNotesClient() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1">
             <input
               placeholder="Quick Fill Note"
-              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111714] focus:outline-0 focus:ring-0 border border-[#dce5df] bg-white focus:border-[#dce5df] h-14 placeholder:text-[#648771] p-[15px] text-base font-normal leading-normal"
+              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-foreground focus:outline-0 focus:ring-0 border border-input bg-background focus:border-input h-14 placeholder:text-muted-foreground p-[15px] text-base font-normal leading-normal"
               {...form.register("content")}
               autoComplete="off"
             />
@@ -64,15 +64,15 @@ export function EpicNotesClient() {
 
       <div className="max-w-[480px] mx-auto">
         {notes.length === 0 && (
-          <div className="text-center py-10 text-[#648771]">
+          <div className="text-center py-10 text-muted-foreground">
             <p>No epic notes yet. Add one!</p>
           </div>
         )}
         {notes.map(note => (
-          <div key={note.id} className="flex items-center bg-white px-4 min-h-[72px] py-2 border-b border-[#f0f4f2]">
+          <div key={note.id} className="flex items-center bg-background px-4 min-h-[72px] py-2 border-b border-border">
             <div className="flex flex-col justify-center overflow-hidden">
-              <p className="text-[#111714] text-base font-medium leading-normal truncate">{note.content}</p>
-              <p className="text-[#648771] text-sm font-normal leading-normal">{format(new Date(note.createdAt), 'yyyy-MM-dd')}</p>
+              <p className="text-foreground text-base font-medium leading-normal truncate">{note.content}</p>
+              <p className="text-muted-foreground text-sm font-normal leading-normal">{format(new Date(note.createdAt), 'yyyy-MM-dd')}</p>
             </div>
           </div>
         ))}

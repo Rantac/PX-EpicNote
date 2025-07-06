@@ -16,6 +16,7 @@ const AnalysisIcon = () => (
     </svg>
 );
 
+
 const navItems = [
   { href: "/", label: "Epic Notes", icon: EpicNotesIcon },
   { href: "/analysis", label: "Analysis", icon: AnalysisIcon },
@@ -25,7 +26,7 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex gap-2 border-t border-[#f0f4f2] bg-white px-4 py-1">
+    <nav className="flex gap-2 border-t border-border bg-background px-4 py-1">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -34,7 +35,7 @@ export function BottomNav() {
               href={item.href}
               className={cn(
                 "flex flex-1 flex-col items-center justify-end gap-1 rounded-full",
-                isActive ? "text-[#111714]" : "text-[#648771]"
+                isActive ? "text-primary" : "text-muted-foreground"
               )}
               aria-current={isActive ? "page" : undefined}
             >

@@ -18,17 +18,17 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <head>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Noto+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       </head>
-      <body className="font-body antialiased bg-white text-[#111714]">
-        <div className="relative flex size-full min-h-screen flex-col justify-between">
-          <div>
-            <main>{children}</main>
-          </div>
-          <div>
+      <body className="font-sans antialiased bg-[#F0F0F0] text-black">
+        <div className="relative size-full min-h-screen max-w-[480px] mx-auto bg-white">
+          <main className="pb-20">
+            {children}
+          </main>
+          <div className="fixed bottom-0 left-1/2 w-full max-w-[480px] -translate-x-1/2">
             <BottomNav />
-            <div className="h-5 bg-white max-w-[480px] mx-auto"></div>
+            <div className="h-5 bg-white"></div>
           </div>
         </div>
         <Toaster />

@@ -42,7 +42,7 @@ export function EpicNotesClient() {
   if (!isHydrated) {
     return (
         <div className="space-y-6">
-          <Skeleton className="h-24 w-full" />
+          <Skeleton className="h-10 w-full" />
           <div className="space-y-4">
             <Skeleton className="h-20 w-full" />
             <Skeleton className="h-20 w-full" />
@@ -56,7 +56,7 @@ export function EpicNotesClient() {
       <Card>
         <CardContent className="p-4">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
                 name="content"
@@ -69,7 +69,6 @@ export function EpicNotesClient() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">Add Note</Button>
             </form>
           </Form>
         </CardContent>

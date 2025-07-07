@@ -6,6 +6,7 @@ export interface EpicNote {
 
 export interface AnalysisNote {
   id: string;
+  title?: string;
   summary: string;
   createdAt: string;
 }

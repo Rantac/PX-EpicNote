@@ -34,10 +34,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { Plus, FileText, Pencil, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const analysisSchema = z.object({
+  title: z.string().min(1, "Title is required").max(100),
   summary: z.string().min(10, "Summary must be at least 10 characters.").max(1000),
 });
 
@@ -55,7 +57,7 @@ export function AnalysisNotesClient() {
 
   const addForm = useForm<z.infer<typeof analysisSchema>>({
     resolver: zodResolver(analysisSchema),
-    defaultValues: { summary: "" },
+    defaultValues: { title: "", summary: "" },
   });
 
   const editForm = useForm<z.infer<typeof analysisSchema>>({
@@ -65,6 +67,7 @@ export function AnalysisNotesClient() {
   const onAddSubmit = (values: z.infer<typeof analysisSchema>) => {
     const newNote: AnalysisNote = {
       id: crypto.randomUUID(),
+      title: values.title,
       summary: values.summary,
       createdAt: new Date().toISOString(),
     };
@@ -75,14 +78,14 @@ export function AnalysisNotesClient() {
   
   const handleEditClick = (note: AnalysisNote) => {
     setSelectedNote(note);
-    editForm.reset({ summary: note.summary });
+    editForm.reset({ title: note.title || "", summary: note.summary });
     setIsEditDialogOpen(true);
   };
 
   const onEditSubmit = (values: z.infer<typeof analysisSchema>) => {
     if (!selectedNote) return;
 
-    setNotes(prev => prev.map(n => n.id === selectedNote.id ? { ...n, summary: values.summary } : n));
+    setNotes(prev => prev.map(n => n.id === selectedNote.id ? { ...n, title: values.title, summary: values.summary } : n));
     setIsEditDialogOpen(false);
     setSelectedNote(null);
   }
@@ -124,6 +127,19 @@ export function AnalysisNotesClient() {
               <form onSubmit={addForm.handleSubmit(onAddSubmit)} className="space-y-4 py-4">
                 <FormField
                   control={addForm.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Title</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter a title for your summary" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={addForm.control}
                   name="summary"
                   render={({ field }) => (
                     <FormItem>
@@ -163,7 +179,7 @@ export function AnalysisNotesClient() {
                         <FileText size={24} />
                       </div>
                       <div className="flex flex-col justify-center overflow-hidden w-full">
-                        <h3 className="text-foreground text-base font-bold leading-normal">Week Summary</h3>
+                        <h3 className="text-foreground text-base font-bold leading-normal">{note.title || 'Week Summary'}</h3>
                         <p className="text-sm text-muted-foreground whitespace-pre-wrap mt-1">{note.summary}</p>
                         <p className="text-xs text-muted-foreground mt-2">{format(new Date(note.createdAt), 'dd-MM-yyyy EEEE')}</p>
                       </div>
@@ -195,9 +211,23 @@ export function AnalysisNotesClient() {
             <form onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-4 py-4">
               <FormField
                 control={editForm.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter a title" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={editForm.control}
                 name="summary"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Summary</FormLabel>
                     <FormControl>
                       <Textarea placeholder="What were the key events and learnings?" {...field} rows={5} />
                     </FormControl>

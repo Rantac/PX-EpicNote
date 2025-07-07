@@ -33,7 +33,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const analysisSchema = z.object({
   summary: z.string().min(10, "Summary must be at least 10 characters.").max(1000),
-  mindset: z.string().min(10, "Mindset notes must be at least 10 characters.").max(1000),
 });
 
 export function AnalysisNotesClient() {
@@ -47,7 +46,7 @@ export function AnalysisNotesClient() {
 
   const form = useForm<z.infer<typeof analysisSchema>>({
     resolver: zodResolver(analysisSchema),
-    defaultValues: { summary: "", mindset: "" },
+    defaultValues: { summary: "" },
   });
 
   const onSubmit = (values: z.infer<typeof analysisSchema>) => {
@@ -56,7 +55,6 @@ export function AnalysisNotesClient() {
       id: crypto.randomUUID(),
       weekOf: `Week of ${format(weekStartDate, 'MMMM d, yyyy')}`,
       summary: values.summary,
-      mindset: values.mindset,
       createdAt: new Date().toISOString(),
     };
     setNotes(prev => [newNote, ...prev].sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
@@ -90,7 +88,7 @@ export function AnalysisNotesClient() {
           <DialogHeader>
             <DialogTitle>New Weekly Analysis</DialogTitle>
             <DialogDescription>
-              Reflect on the past week and set your intentions.
+              Reflect on the past week.
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
@@ -103,19 +101,6 @@ export function AnalysisNotesClient() {
                     <FormLabel>Weekly Summary</FormLabel>
                     <FormControl>
                       <Textarea placeholder="What were the key events and learnings?" {...field} rows={5} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="mindset"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Mindset & Focus</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="What's your mindset for the coming week?" {...field} rows={5} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -151,10 +136,6 @@ export function AnalysisNotesClient() {
                 <div className="mt-2">
                     <h4 className="font-semibold text-sm mb-1 text-foreground">Summary</h4>
                     <p className="text-sm text-muted-foreground whitespace-pre-wrap">{note.summary}</p>
-                </div>
-                <div className="mt-2">
-                    <h4 className="font-semibold text-sm mb-1 text-foreground">Mindset</h4>
-                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">{note.mindset}</p>
                 </div>
               </div>
             </div>

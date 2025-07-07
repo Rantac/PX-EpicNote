@@ -16,16 +16,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -33,7 +23,7 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -52,7 +42,6 @@ export function EpicNotesClient() {
   const [isClient, setIsClient] = useState(false);
   const [selectedNote, setSelectedNote] = useState<EpicNote | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -98,16 +87,8 @@ export function EpicNotesClient() {
     setSelectedNote(null);
   }
 
-  const handleDeleteClick = (note: EpicNote) => {
-    setSelectedNote(note);
-    setIsDeleteDialogOpen(true);
-  };
-
-  const confirmDelete = () => {
-    if (!selectedNote) return;
-    setNotes(prev => prev.filter(n => n.id !== selectedNote.id));
-    setIsDeleteDialogOpen(false);
-    setSelectedNote(null);
+  const handleDelete = (noteId: string) => {
+    setNotes(prev => prev.filter(n => n.id !== noteId));
   }
   
   if (!isClient) {
@@ -160,7 +141,7 @@ export function EpicNotesClient() {
                         <Pencil className="mr-2 h-4 w-4" />
                         <span>Edit</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => handleDeleteClick(note)} className="text-destructive focus:text-destructive">
+                    <DropdownMenuItem onSelect={() => handleDelete(note.id)} className="text-destructive focus:text-destructive">
                         <Trash2 className="mr-2 h-4 w-4" />
                         <span>Delete</span>
                     </DropdownMenuItem>
@@ -200,23 +181,6 @@ export function EpicNotesClient() {
           </Form>
         </DialogContent>
       </Dialog>
-      
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your note.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setSelectedNote(null)}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className={buttonVariants({ variant: "destructive" })}>
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   );
 }

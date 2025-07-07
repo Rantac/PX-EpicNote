@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format } from 'date-fns';
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -33,16 +33,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, FileText, Pencil, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -57,7 +47,6 @@ export function AnalysisNotesClient() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [selectedNote, setSelectedNote] = useState<AnalysisNote | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
 
   useEffect(() => {
@@ -98,16 +87,8 @@ export function AnalysisNotesClient() {
     setSelectedNote(null);
   }
 
-  const handleDeleteClick = (note: AnalysisNote) => {
-    setSelectedNote(note);
-    setIsDeleteDialogOpen(true);
-  };
-
-  const confirmDelete = () => {
-    if (!selectedNote) return;
-    setNotes(prev => prev.filter(n => n.id !== selectedNote.id));
-    setIsDeleteDialogOpen(false);
-    setSelectedNote(null);
+  const handleDelete = (noteId: string) => {
+    setNotes(prev => prev.filter(n => n.id !== noteId));
   }
 
   if (!isClient) {
@@ -194,7 +175,7 @@ export function AnalysisNotesClient() {
                         <Pencil className="mr-2 h-4 w-4" />
                         <span>Edit</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => handleDeleteClick(note)} className="text-destructive focus:text-destructive">
+                    <DropdownMenuItem onSelect={() => handleDelete(note.id)} className="text-destructive focus:text-destructive">
                         <Trash2 className="mr-2 h-4 w-4" />
                         <span>Delete</span>
                     </DropdownMenuItem>
@@ -235,23 +216,6 @@ export function AnalysisNotesClient() {
           </Form>
         </DialogContent>
       </Dialog>
-      
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your summary.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setSelectedNote(null)}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className={buttonVariants({ variant: "destructive" })}>
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   );
 }

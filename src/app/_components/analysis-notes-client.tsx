@@ -123,7 +123,7 @@ export function AnalysisNotesClient() {
                     <FormItem>
                       <FormLabel>Title</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter a title for your summary" {...field} />
+                        <Input placeholder="Enter a title for your summary" {...field} autoComplete="off" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -188,7 +188,7 @@ export function AnalysisNotesClient() {
                   <FormItem>
                     <FormLabel>Title</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter a title" {...field} />
+                      <Input placeholder="Enter a title" {...field} autoComplete="off" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

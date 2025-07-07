@@ -144,11 +144,11 @@ export function EpicNotesClient() {
             <p>No epic notes yet. Add one!</p>
           </div>
         )}
-        <div className="space-y-2">
+        <div className="divide-y divide-border">
             {notes.map(note => (
             <DropdownMenu key={note.id}>
                 <DropdownMenuTrigger asChild>
-                    <div className="flex items-center bg-background px-4 min-h-[72px] py-2 border border-border rounded-lg cursor-pointer transition-colors hover:bg-accent">
+                    <div className="flex items-center bg-background px-4 min-h-[72px] py-2 cursor-pointer transition-colors hover:bg-accent">
                         <div className="flex flex-col justify-center overflow-hidden w-full">
                         <p className="text-foreground text-base font-medium leading-normal truncate">{note.content}</p>
                         <p className="text-muted-foreground text-sm font-normal leading-normal">{format(new Date(note.createdAt), 'yyyy-MM-dd')}</p>

@@ -79,12 +79,12 @@ export function AnalysisNotesClient() {
         <DialogTrigger asChild>
           <Button className="w-full h-14 rounded-xl text-base font-bold">
             <Plus className="mr-2 h-5 w-5" />
-            Add Weekly Analysis
+            Add Week Summary
           </Button>
         </DialogTrigger>
         <DialogContent className="bg-background">
           <DialogHeader>
-            <DialogTitle>New Weekly Analysis</DialogTitle>
+            <DialogTitle>New Week Summary</DialogTitle>
             <DialogDescription>
               Reflect on the past week.
             </DialogDescription>
@@ -96,7 +96,7 @@ export function AnalysisNotesClient() {
                 name="summary"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Weekly Summary</FormLabel>
+                    <FormLabel>Week Summary</FormLabel>
                     <FormControl>
                       <Textarea placeholder="What were the key events and learnings?" {...field} rows={5} />
                     </FormControl>
@@ -130,7 +130,7 @@ export function AnalysisNotesClient() {
                 <FileText size={24} />
               </div>
               <div className="flex flex-col justify-center overflow-hidden w-full">
-                <h3 className="text-foreground text-base font-bold leading-normal">Weekly Summary</h3>
+                <h3 className="text-foreground text-base font-bold leading-normal">Week Summary</h3>
                 <p className="text-sm text-muted-foreground whitespace-pre-wrap mt-1">{note.summary}</p>
                 <p className="text-xs text-muted-foreground mt-2">{format(new Date(note.createdAt), 'dd-MM-yyyy EEEE')}</p>
               </div>

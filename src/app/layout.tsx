@@ -1,7 +1,7 @@
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
-import { BottomNav } from "@/components/BottomNav";
+import { ClientBottomNav } from '@/components/client-bottom-nav';
 
 export const metadata: Metadata = {
   title: 'PXNote',
@@ -26,10 +26,7 @@ export default function RootLayout({
           <main className="flex-1 pb-16">
             {children}
           </main>
-          <div className="fixed bottom-0 left-1/2 w-full max-w-[480px] -translate-x-1/2">
-            <BottomNav />
-            <div className="h-safe-bottom bg-background"></div>
-          </div>
+          <ClientBottomNav />
         </div>
         <Toaster />
       </body>

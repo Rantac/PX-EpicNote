@@ -129,7 +129,7 @@ export function EpicNotesClient() {
       <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3 mx-auto">
         <form onSubmit={createForm.handleSubmit(onCreateSubmit)} className="flex-1">
             <input
-              placeholder="Quick Fill Note"
+              placeholder="Quick FX Epic Note"
               className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-foreground focus:outline-0 focus:ring-0 border border-input bg-background focus:border-input h-14 placeholder:text-muted-foreground p-[15px] text-base font-normal leading-normal"
               {...createForm.register("content")}
               onKeyDown={handleKeyDown}
@@ -141,7 +141,7 @@ export function EpicNotesClient() {
       <div className="max-w-[480px] mx-auto px-4">
         {notes.length === 0 && (
           <div className="text-center py-10 text-muted-foreground">
-            <p>No epic notes yet. Add one!</p>
+            <p>No FX Epic notes yet. Add one!</p>
           </div>
         )}
         <div className="divide-y divide-border">

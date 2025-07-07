@@ -13,8 +13,8 @@ const AnalysisIcon = () => (
 
 
 const navItems = [
-  { href: "/", label: "Epic Notes", icon: DollarSign },
-  { href: "/crypto", label: "Crypto", icon: Bitcoin },
+  { href: "/", label: "FX Epic", icon: DollarSign },
+  { href: "/crypto", label: "Crypto Epic", icon: Bitcoin },
   { href: "/analysis", label: "Analysis", icon: AnalysisIcon },
 ];
 

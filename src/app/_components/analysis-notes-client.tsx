@@ -12,12 +12,10 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-  DialogClose
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -119,9 +117,6 @@ export function AnalysisNotesClient() {
           <DialogContent className="bg-background">
             <DialogHeader>
               <DialogTitle>New Week Summary</DialogTitle>
-              <DialogDescription>
-                Reflect on the past week.
-              </DialogDescription>
             </DialogHeader>
             <Form {...addForm}>
               <form onSubmit={addForm.handleSubmit(onAddSubmit)} className="space-y-4 py-4">
@@ -152,11 +147,6 @@ export function AnalysisNotesClient() {
                   )}
                 />
                 <DialogFooter>
-                    <DialogClose asChild>
-                      <Button type="button" variant="secondary">
-                        Cancel
-                      </Button>
-                    </DialogClose>
                     <Button type="submit">Save Analysis</Button>
                 </DialogFooter>
               </form>
@@ -236,9 +226,6 @@ export function AnalysisNotesClient() {
                 )}
               />
               <DialogFooter>
-                  <DialogClose asChild>
-                    <Button type="button" variant="secondary" onClick={() => setSelectedNote(null)}>Cancel</Button>
-                  </DialogClose>
                   <Button type="submit">Save Changes</Button>
               </DialogFooter>
             </form>

@@ -3,12 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-
-const EpicNotesIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-        <path d="M232,48V200a16,16,0,0,1-16,16H88a16,16,0,0,1-16-16V48A16,16,0,0,1,88,32H216A16,16,0,0,1,232,48ZM64,48V200H48a8,8,0,0,1,0-16H56V56H48a8,8,0,0,1,0-16Zm152-8H88a8,8,0,0,0-8,8V200a8,8,0,0,0,8,8H216a8,8,0,0,0,8-8V48A8,8,0,0,0,216,40Z"></path>
-    </svg>
-);
+import { StickyNote } from "lucide-react";
 
 const AnalysisIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
@@ -18,7 +13,7 @@ const AnalysisIcon = () => (
 
 
 const navItems = [
-  { href: "/", label: "Epic Notes", icon: EpicNotesIcon },
+  { href: "/", label: "Epic Notes", icon: StickyNote },
   { href: "/analysis", label: "Analysis", icon: AnalysisIcon },
 ];
 

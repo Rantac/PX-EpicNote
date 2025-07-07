@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { DollarSign } from "lucide-react";
+import { DollarSign, Bitcoin } from "lucide-react";
 
 const AnalysisIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
@@ -14,6 +14,7 @@ const AnalysisIcon = () => (
 
 const navItems = [
   { href: "/", label: "Epic Notes", icon: DollarSign },
+  { href: "/crypto", label: "Crypto", icon: Bitcoin },
   { href: "/analysis", label: "Analysis", icon: AnalysisIcon },
 ];
 

@@ -9,3 +9,9 @@ export interface AnalysisNote {
   summary: string;
   createdAt: string;
 }
+
+export interface CryptoNote {
+  id: string;
+  content: string;
+  createdAt: string;
+}

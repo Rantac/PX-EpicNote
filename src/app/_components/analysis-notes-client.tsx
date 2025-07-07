@@ -6,7 +6,7 @@ import type { AnalysisNote } from "@/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { format, startOfWeek } from 'date-fns';
+import { format } from 'date-fns';
 
 import { Button } from "@/components/ui/button";
 import {
@@ -50,10 +50,8 @@ export function AnalysisNotesClient() {
   });
 
   const onSubmit = (values: z.infer<typeof analysisSchema>) => {
-    const weekStartDate = startOfWeek(new Date(), { weekStartsOn: 1 }); // Monday
     const newNote: AnalysisNote = {
       id: crypto.randomUUID(),
-      weekOf: `Week of ${format(weekStartDate, 'MMMM d, yyyy')}`,
       summary: values.summary,
       createdAt: new Date().toISOString(),
     };
@@ -132,11 +130,9 @@ export function AnalysisNotesClient() {
                 <FileText size={24} />
               </div>
               <div className="flex flex-col justify-center overflow-hidden w-full">
-                <h3 className="text-foreground text-base font-bold leading-normal">{note.weekOf}</h3>
-                <div className="mt-2">
-                    <h4 className="font-semibold text-sm mb-1 text-foreground">Summary</h4>
-                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">{note.summary}</p>
-                </div>
+                <h3 className="text-foreground text-base font-bold leading-normal">Weekly Summary</h3>
+                <p className="text-sm text-muted-foreground whitespace-pre-wrap mt-1">{note.summary}</p>
+                <p className="text-xs text-muted-foreground mt-2">{format(new Date(note.createdAt), 'dd-MM-yyyy EEEE')}</p>
               </div>
             </div>
             ))}

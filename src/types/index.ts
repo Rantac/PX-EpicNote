@@ -6,7 +6,6 @@ export interface EpicNote {
 
 export interface AnalysisNote {
   id: string;
-  weekOf: string;
   summary: string;
   createdAt: string;
 }

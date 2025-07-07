@@ -110,7 +110,7 @@ export function AnalysisNotesClient() {
               <Plus className="h-5 w-5" />
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-background">
+          <DialogContent className="bg-background max-h-[90dvh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>New Week Summary</DialogTitle>
             </DialogHeader>
@@ -175,7 +175,7 @@ export function AnalysisNotesClient() {
       </div>
 
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent>
+        <DialogContent className="max-h-[90dvh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Week Summary</DialogTitle>
           </DialogHeader>

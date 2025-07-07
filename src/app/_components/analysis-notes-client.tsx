@@ -110,8 +110,7 @@ export function AnalysisNotesClient() {
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button className="w-full h-14 rounded-xl text-base font-bold">
-              <Plus className="mr-2 h-5 w-5" />
-              Add Week Summary
+              <Plus className="h-5 w-5" />
             </Button>
           </DialogTrigger>
           <DialogContent className="bg-background">

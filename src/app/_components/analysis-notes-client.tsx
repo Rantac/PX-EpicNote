@@ -25,15 +25,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Plus, FileText, Pencil, Trash2 } from "lucide-react";
+import { Plus, FileText, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const analysisSchema = z.object({
@@ -74,7 +68,7 @@ export function AnalysisNotesClient() {
     setIsAddDialogOpen(false);
   };
   
-  const handleEditClick = (note: AnalysisNote) => {
+  const handleCardClick = (note: AnalysisNote) => {
     setSelectedNote(note);
     editForm.reset({ title: note.title || "", summary: note.summary });
     setIsEditDialogOpen(true);
@@ -90,6 +84,8 @@ export function AnalysisNotesClient() {
 
   const handleDelete = (noteId: string) => {
     setNotes(prev => prev.filter(n => n.id !== noteId));
+    setIsEditDialogOpen(false);
+    setSelectedNote(null);
   }
 
   if (!isClient) {
@@ -146,7 +142,7 @@ export function AnalysisNotesClient() {
                     </FormItem>
                   )}
                 />
-                <DialogFooter>
+                <DialogFooter className="flex-row justify-end">
                     <Button type="submit">Save Analysis</Button>
                 </DialogFooter>
               </form>
@@ -162,30 +158,16 @@ export function AnalysisNotesClient() {
           ) : (
             <div className="space-y-2">
               {notes.map(note => (
-                <DropdownMenu key={note.id}>
-                  <DropdownMenuTrigger asChild>
-                    <div className="flex items-start gap-4 bg-background px-4 py-3 border border-border rounded-xl cursor-pointer transition-colors hover:bg-accent">
-                      <div className="text-foreground flex items-center justify-center rounded-lg bg-muted shrink-0 size-12 mt-1">
-                        <FileText size={24} />
-                      </div>
-                      <div className="flex flex-col justify-center overflow-hidden w-full">
-                        <h3 className="text-foreground text-base font-bold leading-normal">{note.title || 'Week Summary'}</h3>
-                        <p className="text-sm text-muted-foreground whitespace-pre-wrap mt-1">{note.summary}</p>
-                        <p className="text-xs text-muted-foreground mt-2">{format(new Date(note.createdAt), 'dd-MM-yyyy EEEE')}</p>
-                      </div>
-                    </div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onSelect={() => handleEditClick(note)}>
-                        <Pencil className="mr-2 h-4 w-4" />
-                        <span>Edit</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => handleDelete(note.id)} className="text-destructive focus:text-destructive">
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        <span>Delete</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <div key={note.id} onClick={() => handleCardClick(note)} className="flex items-start gap-4 bg-background px-4 py-3 border border-border rounded-xl cursor-pointer transition-colors hover:bg-accent">
+                  <div className="text-foreground flex items-center justify-center rounded-lg bg-muted shrink-0 size-12 mt-1">
+                    <FileText size={24} />
+                  </div>
+                  <div className="flex flex-col justify-center overflow-hidden w-full">
+                    <h3 className="text-foreground text-base font-bold leading-normal">{note.title || 'Week Summary'}</h3>
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap mt-1">{note.summary}</p>
+                    <p className="text-xs text-muted-foreground mt-2">{format(new Date(note.createdAt), 'dd-MM-yyyy EEEE')}</p>
+                  </div>
+                </div>
               ))}
             </div>
           )}
@@ -225,7 +207,11 @@ export function AnalysisNotesClient() {
                   </FormItem>
                 )}
               />
-              <DialogFooter>
+              <DialogFooter className="flex-row justify-between">
+                  <Button type="button" variant="destructive" onClick={() => selectedNote && handleDelete(selectedNote.id)}>
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Delete
+                  </Button>
                   <Button type="submit">Save Changes</Button>
               </DialogFooter>
             </form>

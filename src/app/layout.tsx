@@ -1,7 +1,7 @@
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
-import { ClientBottomNav } from '@/components/client-bottom-nav';
+import { ResponsiveShell } from '@/components/ResponsiveShell';
 
 export const metadata: Metadata = {
   title: 'PXNote',
@@ -22,12 +22,9 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       </head>
       <body className="font-sans antialiased bg-background text-foreground">
-        <div className="relative flex flex-col min-h-screen max-w-[480px] mx-auto bg-background">
-          <main className="flex-1 pb-16">
-            {children}
-          </main>
-          <ClientBottomNav />
-        </div>
+        <ResponsiveShell>
+          {children}
+        </ResponsiveShell>
         <Toaster />
       </body>
     </html>

@@ -90,9 +90,9 @@ export function AnalysisNotesClient() {
 
   if (!isClient) {
     return (
-        <div className="px-4 max-w-[480px] mx-auto">
+        <div className="px-4">
             <Skeleton className="h-14 w-full my-3" />
-            <div className="space-y-2">
+            <div className="space-y-2 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4">
                 <Skeleton className="h-28 w-full" />
                 <Skeleton className="h-28 w-full" />
                 <Skeleton className="h-28 w-full" />
@@ -103,7 +103,7 @@ export function AnalysisNotesClient() {
 
   return (
     <>
-      <div className="max-w-[480px] mx-auto px-4 py-3">
+      <div className="px-4 py-3">
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button className="w-full h-14 rounded-xl text-base font-bold">
@@ -156,7 +156,7 @@ export function AnalysisNotesClient() {
               <p>No analysis notes yet. Add your first one!</p>
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-2 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4">
               {notes.map(note => (
                 <div key={note.id} onClick={() => handleCardClick(note)} className="flex items-start gap-4 bg-background px-4 py-3 border border-border rounded-xl cursor-pointer transition-colors hover:bg-accent">
                   <div className="text-foreground flex items-center justify-center rounded-lg bg-muted shrink-0 size-12 mt-1">

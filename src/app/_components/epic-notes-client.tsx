@@ -93,7 +93,7 @@ export function EpicNotesClient() {
   
   if (!isClient) {
       return (
-          <div className="px-4 max-w-[480px] mx-auto">
+          <div className="px-4">
               <Skeleton className="h-14 w-full mb-3" />
               <div className="space-y-2">
                   <Skeleton className="h-[72px] w-full" />
@@ -107,7 +107,7 @@ export function EpicNotesClient() {
   return (
     <>
     <div>
-      <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3 mx-auto">
+      <div className="flex flex-wrap items-end gap-4 px-4 py-3">
         <form onSubmit={createForm.handleSubmit(onCreateSubmit)} className="flex-1">
             <input
               placeholder="Quick FX Epic Note"
@@ -119,7 +119,7 @@ export function EpicNotesClient() {
         </form>
       </div>
 
-      <div className="max-w-[480px] mx-auto px-4">
+      <div className="px-4">
         {notes.length === 0 && (
           <div className="text-center py-10 text-muted-foreground">
             <p>No FX Epic notes yet. Add one!</p>

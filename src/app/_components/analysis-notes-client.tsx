@@ -92,7 +92,7 @@ export function AnalysisNotesClient() {
     return (
         <div className="px-4">
             <Skeleton className="h-14 w-full my-3" />
-            <div className="space-y-2 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4">
+            <div className="space-y-2">
                 <Skeleton className="h-28 w-full" />
                 <Skeleton className="h-28 w-full" />
                 <Skeleton className="h-28 w-full" />
@@ -107,7 +107,7 @@ export function AnalysisNotesClient() {
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button className="w-full h-14 rounded-xl text-base font-bold">
-              <Plus className="h-5 w-5" />
+              <Plus className="h-5 w-5" /> New Week Summary
             </Button>
           </DialogTrigger>
           <DialogContent className="bg-background max-h-[90dvh] overflow-y-auto">
@@ -156,16 +156,16 @@ export function AnalysisNotesClient() {
               <p>No analysis notes yet. Add your first one!</p>
             </div>
           ) : (
-            <div className="space-y-2 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4">
+            <div className="divide-y divide-border">
               {notes.map(note => (
-                <div key={note.id} onClick={() => handleCardClick(note)} className="flex items-start gap-4 bg-background px-4 py-3 border border-border rounded-xl cursor-pointer transition-colors hover:bg-accent">
+                <div key={note.id} onClick={() => handleCardClick(note)} className="flex items-start gap-4 bg-background px-4 py-3 min-h-[72px] cursor-pointer transition-colors hover:bg-accent">
                   <div className="text-foreground flex items-center justify-center rounded-lg bg-muted shrink-0 size-12 mt-1">
                     <FileText size={24} />
                   </div>
                   <div className="flex flex-col justify-center overflow-hidden w-full">
-                    <h3 className="text-foreground text-base font-bold leading-normal">{note.title || 'Week Summary'}</h3>
-                    <p className="text-sm text-muted-foreground whitespace-pre-wrap mt-1">{note.summary}</p>
-                    <p className="text-xs text-muted-foreground mt-2">{format(new Date(note.createdAt), 'dd-MM-yyyy EEEE')}</p>
+                    <h3 className="text-foreground text-base font-bold leading-normal truncate">{note.title || 'Week Summary'}</h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{note.summary}</p>
+                    <p className="text-xs text-muted-foreground mt-2">{format(new Date(note.createdAt), 'MMMM dd, yyyy')}</p>
                   </div>
                 </div>
               ))}

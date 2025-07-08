@@ -10,9 +10,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Manrope', 'Noto Sans', 'sans-serif'],
-        headline: ['Manrope', 'Noto Sans', 'sans-serif'],
-        code: ['monospace'],
+        sans: ['Work Sans', 'Noto Sans', 'sans-serif'],
       },
       colors: {
         background: 'hsl(var(--background))',
@@ -95,5 +93,5 @@ export default {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [require('tailwindcss-animate'), require('@tailwindcss/line-clamp')],
 } satisfies Config;

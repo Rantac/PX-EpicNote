@@ -163,8 +163,8 @@ export function AnalysisNotesClient() {
                     <FileText size={24} />
                   </div>
                   <div className="flex flex-col justify-center overflow-hidden w-full">
-                    <h3 className="text-foreground text-base font-bold leading-normal truncate">{note.title || 'Week Summary'}</h3>
-                    <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{note.summary}</p>
+                    <h3 className="text-foreground text-base font-bold leading-normal md:truncate whitespace-pre-wrap break-words">{note.title || 'Week Summary'}</h3>
+                    <p className="text-sm text-muted-foreground mt-1 md:line-clamp-2 whitespace-pre-wrap break-words">{note.summary}</p>
                     <p className="text-xs text-muted-foreground mt-2">{format(new Date(note.createdAt), 'MMMM dd, yyyy')}</p>
                   </div>
                 </div>

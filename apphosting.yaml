@@ -5,3 +5,12 @@ runConfig:
   # Increase this value if you'd like to automatically spin up
   # more instances in response to increased traffic.
   maxInstances: 1
+  # Add secrets that will be available as environment variables.
+  # The value of the environment variable will be the secret's value.
+  secrets:
+    - secret: MONGODB_URI
+      # MONGODB_URI will be available as an environment variable.
+      # It will be accessible via process.env.MONGODB_URI
+      availability:
+        - BUILD
+        - RUNTIME

@@ -1,4 +1,4 @@
-import { CryptoNotesClient } from '../_components/crypto-notes-client';
+import CryptoNotesClient from '../_components/crypto-notes-client';
 
 export default function CryptoPage() {
   return (

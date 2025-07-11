@@ -1,4 +1,4 @@
-import { EpicNotesClient } from './_components/epic-notes-client';
+import EpicNotesClient from './_components/epic-notes-client';
 
 export default function Home() {
   return (

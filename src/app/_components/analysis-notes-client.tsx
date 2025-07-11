@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -28,45 +27,28 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Plus, FileText, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/hooks/use-toast";
+
+// Define the shape of a note, matching the backend
+interface AnalysisNote {
+  _id: string;
+  title: string;
+  summary: string;
+  createdAt: string;
+}
 
 const analysisSchema = z.object({
   title: z.string().min(1, "Title is required").max(100),
   summary: z.string().min(10, "Summary must be at least 10 characters.").max(1000),
 });
 
-// Define a type for your analysis notes based on the schema or API response
-interface AnalysisNote {
-  id?: string; // Assuming your API returns an ID
-  title: string;
-  summary: string;
-  createdAt: string; // Or Date, depending on how you handle it
-}
-export function AnalysisNotesClient() {
-  const [notes, setNotes] = useState<any[]>([]); // Change type to any[] for now, you can define a proper type later
+export default function AnalysisNotesClient() {
+  const [notes, setNotes] = useState<AnalysisNote[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [selectedNote, setSelectedNote] = useState<AnalysisNote | null>(null); 
+  const [selectedNote, setSelectedNote] = useState<AnalysisNote | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-
-
-  useEffect(() => {
-    const fetchNotes = async () => {
-      try {
-        const response = await fetch("/api/analysis");
-        if (!response.ok) {
-          throw new Error("Failed to fetch analysis notes");
-        }
-        const data = await response.json();
-        setNotes(data.notes || []); // Assuming the API returns an object with a 'notes' array
-      } catch (error) {
-        console.error("Error fetching analysis notes:", error);
-        setNotes([]); // Set to empty array on error
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchNotes();
-  }, []);
+  const { toast } = useToast();
 
   const addForm = useForm<z.infer<typeof analysisSchema>>({
     resolver: zodResolver(analysisSchema),
@@ -76,55 +58,105 @@ export function AnalysisNotesClient() {
   const editForm = useForm<z.infer<typeof analysisSchema>>({
     resolver: zodResolver(analysisSchema),
   });
-
-  const onAddSubmit = (values: z.infer<typeof analysisSchema>) => {
-    const newNote = {
-      title: values.title,
-      summary: values.summary,
-      createdAt: new Date().toISOString(),
-    };
-
-    fetch("/api/analysis", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newNote),
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.status === "succeeded") {
-          setNotes(prev => [data.note, ...prev].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
-          addForm.reset();
-          setIsAddDialogOpen(false);
-        } else {
-          console.error("Error saving analysis note:", data.error);
-        }
-      })
-      .catch(error => console.error("Error submitting analysis note:", error));
+  
+  const fetchNotes = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/analysis');
+      if (response.ok) {
+        const data = await response.json();
+        // Assuming the backend returns notes with `createdAt`
+        setNotes(data.sort((a: AnalysisNote, b: AnalysisNote) => {
+            const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+            const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+            return dateB - dateA;
+        }));
+      } else {
+        toast({ title: "Error", description: "Failed to fetch notes.", variant: "destructive" });
+      }
+    } catch (error) {
+      toast({ title: "Error", description: "An error occurred while fetching notes.", variant: "destructive" });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  useEffect(() => {
+    fetchNotes();
+  }, []);
+
+  const onAddSubmit = async (values: z.infer<typeof analysisSchema>) => {
+    try {
+      const response = await fetch('/api/analysis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...values, createdAt: new Date().toISOString() }),
+      });
+
+      if (response.ok) {
+        toast({ title: "Success", description: "Analysis note created." });
+        addForm.reset();
+        setIsAddDialogOpen(false);
+        fetchNotes(); // Re-fetch notes to get the latest list
+      } else {
+        toast({ title: "Error", description: "Failed to create note.", variant: "destructive" });
+      }
+    } catch (error) {
+      toast({ title: "Error", description: "An unexpected error occurred.", variant: "destructive" });
+    }
+  };
+  
   const handleCardClick = (note: AnalysisNote) => {
     setSelectedNote(note);
-    editForm.reset({ title: note.title || "", summary: note.summary });
+    editForm.reset({ title: note.title, summary: note.summary });
     setIsEditDialogOpen(true);
   };
 
-  const onEditSubmit = (values: z.infer<typeof analysisSchema>) => {
+  const onEditSubmit = async (values: z.infer<typeof analysisSchema>) => {
     if (!selectedNote) return;
 
-    // Implement update logic by sending a PUT request to your API route
-    // This requires expanding the API route to handle PUT requests with note IDs
-    console.log("Edit submit not implemented yet for API persistence");
+    try {
+      const response = await fetch('/api/analysis', {
+        method: 'POST', // Using POST for both create and update
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...values, _id: selectedNote._id, createdAt: selectedNote.createdAt }),
+      });
+
+      if (response.ok) {
+        toast({ title: "Success", description: "Analysis note updated." });
+        setIsEditDialogOpen(false);
+        setSelectedNote(null);
+        fetchNotes();
+      } else {
+        toast({ title: "Error", description: "Failed to update note.", variant: "destructive" });
+      }
+    } catch (error) {
+      toast({ title: "Error", description: "An unexpected error occurred.", variant: "destructive" });
+    }
   }
 
-  const handleDelete = (noteId: string) => {
-    // Implement delete logic by sending a DELETE request to your API route
-    // This requires expanding the API route to handle DELETE requests with note IDs
-    console.log("Delete not implemented yet for API persistence");
-  }
+  const handleDelete = async (noteId: string) => {
+    if (!noteId || !confirm("Are you sure you want to delete this note?")) {
+        return;
+    }
+    
+    try {
+      const response = await fetch(`/api/analysis?id=${noteId}`, {
+        method: 'DELETE',
+      });
 
-  // Remove the isClient check and replace with isLoading
+      if (response.ok) {
+        toast({ title: "Success", description: "Note deleted." });
+        setIsEditDialogOpen(false);
+        setSelectedNote(null);
+        fetchNotes();
+      } else {
+        toast({ title: "Error", description: "Failed to delete note.", variant: "destructive" });
+      }
+    } catch (error) {
+      toast({ title: "Error", description: "An unexpected error occurred.", variant: "destructive" });
+    }
+  }
 
   if (isLoading) {
     return (
@@ -195,18 +227,25 @@ export function AnalysisNotesClient() {
             </div>
           ) : (
             <div className="divide-y divide-border">
-              {notes.map(note => (
-                <div key={note.id} onClick={() => handleCardClick(note)} className="flex items-start gap-4 bg-background px-4 py-3 min-h-[72px] cursor-pointer transition-colors hover:bg-accent">
-                  <div className="text-foreground flex items-center justify-center rounded-lg bg-muted shrink-0 size-12 mt-1">
-                    <FileText size={24} />
+              {notes.map(note => {
+                const isValidDate = note.createdAt && !isNaN(new Date(note.createdAt).getTime());
+                return (
+                  <div key={note._id} onClick={() => handleCardClick(note)} className="flex items-start gap-4 bg-background px-4 py-3 min-h-[72px] cursor-pointer transition-colors hover:bg-accent">
+                    <div className="text-foreground flex items-center justify-center rounded-lg bg-muted shrink-0 size-12 mt-1">
+                      <FileText size={24} />
+                    </div>
+                    <div className="flex flex-col justify-center overflow-hidden w-full">
+                      <h3 className="text-foreground text-base font-bold leading-normal whitespace-pre-wrap break-words">{note.title || 'Week Summary'}</h3>
+                      <p className="text-sm text-foreground mt-1 whitespace-pre-wrap break-words">{note.summary}</p>
+                      {isValidDate && (
+                        <p className="text-xs text-muted-foreground mt-2">
+                          {format(new Date(note.createdAt), 'MMMM dd, yyyy')}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex flex-col justify-center overflow-hidden w-full">
-                    <h3 className="text-foreground text-base font-bold leading-normal md:truncate whitespace-pre-wrap break-words">{note.title || 'Week Summary'}</h3>
-                    <p className="text-sm text-foreground mt-1 md:line-clamp-2 whitespace-pre-wrap break-words">{note.summary}</p>
-                    <p className="text-xs text-muted-foreground mt-2">{format(new Date(note.createdAt), 'MMMM dd, yyyy')}</p>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
         </div>
@@ -246,7 +285,7 @@ export function AnalysisNotesClient() {
                 )}
               />
               <DialogFooter className="flex-row justify-between">
-                  <Button type="button" variant="destructive" onClick={() => selectedNote && handleDelete(selectedNote.id)}>
+                  <Button type="button" variant="destructive" onClick={() => selectedNote && handleDelete(selectedNote._id)}>
                     <Trash2 className="mr-2 h-4 w-4" />
                     Delete
                   </Button>

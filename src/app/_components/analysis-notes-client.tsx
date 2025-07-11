@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useLocalStorage } from "@/hooks/use-local-storage";
-import type { AnalysisNote } from "@/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -35,16 +34,38 @@ const analysisSchema = z.object({
   summary: z.string().min(10, "Summary must be at least 10 characters.").max(1000),
 });
 
+// Define a type for your analysis notes based on the schema or API response
+interface AnalysisNote {
+  id?: string; // Assuming your API returns an ID
+  title: string;
+  summary: string;
+  createdAt: string; // Or Date, depending on how you handle it
+}
 export function AnalysisNotesClient() {
-  const [notes, setNotes] = useLocalStorage<AnalysisNote[]>("analysis-notes", []);
-  const [isClient, setIsClient] = useState(false);
+  const [notes, setNotes] = useState<any[]>([]); // Change type to any[] for now, you can define a proper type later
+  const [isLoading, setIsLoading] = useState(true);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [selectedNote, setSelectedNote] = useState<AnalysisNote | null>(null);
+  const [selectedNote, setSelectedNote] = useState<AnalysisNote | null>(null); 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
 
   useEffect(() => {
-    setIsClient(true);
+    const fetchNotes = async () => {
+      try {
+        const response = await fetch("/api/analysis");
+        if (!response.ok) {
+          throw new Error("Failed to fetch analysis notes");
+        }
+        const data = await response.json();
+        setNotes(data.notes || []); // Assuming the API returns an object with a 'notes' array
+      } catch (error) {
+        console.error("Error fetching analysis notes:", error);
+        setNotes([]); // Set to empty array on error
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchNotes();
   }, []);
 
   const addForm = useForm<z.infer<typeof analysisSchema>>({
@@ -57,17 +78,32 @@ export function AnalysisNotesClient() {
   });
 
   const onAddSubmit = (values: z.infer<typeof analysisSchema>) => {
-    const newNote: AnalysisNote = {
-      id: crypto.randomUUID(),
+    const newNote = {
       title: values.title,
       summary: values.summary,
       createdAt: new Date().toISOString(),
     };
-    setNotes(prev => [newNote, ...prev].sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
-    addForm.reset();
-    setIsAddDialogOpen(false);
+
+    fetch("/api/analysis", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newNote),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "succeeded") {
+          setNotes(prev => [data.note, ...prev].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+          addForm.reset();
+          setIsAddDialogOpen(false);
+        } else {
+          console.error("Error saving analysis note:", data.error);
+        }
+      })
+      .catch(error => console.error("Error submitting analysis note:", error));
   };
-  
+
   const handleCardClick = (note: AnalysisNote) => {
     setSelectedNote(note);
     editForm.reset({ title: note.title || "", summary: note.summary });
@@ -77,18 +113,20 @@ export function AnalysisNotesClient() {
   const onEditSubmit = (values: z.infer<typeof analysisSchema>) => {
     if (!selectedNote) return;
 
-    setNotes(prev => prev.map(n => n.id === selectedNote.id ? { ...n, title: values.title, summary: values.summary } : n));
-    setIsEditDialogOpen(false);
-    setSelectedNote(null);
+    // Implement update logic by sending a PUT request to your API route
+    // This requires expanding the API route to handle PUT requests with note IDs
+    console.log("Edit submit not implemented yet for API persistence");
   }
 
   const handleDelete = (noteId: string) => {
-    setNotes(prev => prev.filter(n => n.id !== noteId));
-    setIsEditDialogOpen(false);
-    setSelectedNote(null);
+    // Implement delete logic by sending a DELETE request to your API route
+    // This requires expanding the API route to handle DELETE requests with note IDs
+    console.log("Delete not implemented yet for API persistence");
   }
 
-  if (!isClient) {
+  // Remove the isClient check and replace with isLoading
+
+  if (isLoading) {
     return (
         <div className="px-4">
             <Skeleton className="h-14 w-full my-3" />

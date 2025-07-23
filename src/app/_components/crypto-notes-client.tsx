@@ -204,9 +204,7 @@ export default function CryptoNotesClient() {
                                 </div>
                                 <div className="flex flex-col justify-center overflow-hidden w-full">
                                 <p className="text-foreground text-base font-medium leading-normal whitespace-pre-wrap break-words">{note.content}</p>
-                                {isValidDate && (
-                                    <p className="text-muted-foreground text-sm font-normal leading-normal mt-2">{format(new Date(note.createdAt), 'MMMM dd, yyyy')}</p>
-                                )}
+                                
                                 </div>
                             </div>
                         </DropdownMenuTrigger>

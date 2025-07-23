@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { format } from "date-fns";
+// import { format } from "date-fns"; // Removed date-fns import
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pencil, Trash2 } from "lucide-react";
 import {
@@ -192,7 +192,7 @@ export default function EpicNotesClient() {
         )}
         <div className="divide-y divide-border">
             {notes.map(note => {
-                const isValidDate = note.createdAt && !isNaN(new Date(note.createdAt).getTime());
+                // const isValidDate = note.createdAt && !isNaN(new Date(note.createdAt).getTime()); // Removed date validity check
                 return (
                     <DropdownMenu key={note._id}>
                         <DropdownMenuTrigger asChild>
@@ -204,9 +204,9 @@ export default function EpicNotesClient() {
                                 </div>
                                 <div className="flex flex-col justify-center overflow-hidden w-full">
                                 <p className="text-foreground text-base font-medium leading-normal whitespace-pre-wrap break-words">{note.content}</p>
-                                {isValidDate && (
+                                {/* {isValidDate && ( // Removed date display
                                     <p className="text-muted-foreground text-sm font-normal leading-normal mt-2">{format(new Date(note.createdAt), 'MMMM dd, yyyy')}</p>
-                                )}
+                                )} */}
                                 </div>
                             </div>
                         </DropdownMenuTrigger>

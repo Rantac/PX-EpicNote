@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pencil, Trash2 } from "lucide-react";
 import {
@@ -191,36 +190,32 @@ export default function CryptoNotesClient() {
           </div>
         )}
         <div className="divide-y divide-border">
-            {notes.map(note => {
-                const isValidDate = note.createdAt && !isNaN(new Date(note.createdAt).getTime());
-                return (
-                    <DropdownMenu key={note._id}>
-                        <DropdownMenuTrigger asChild>
-                            <div className="flex items-start md:items-center gap-4 bg-background px-4 min-h-[72px] py-2 cursor-pointer transition-colors hover:bg-accent">
-                                <div className="text-foreground flex items-center justify-center rounded-lg bg-muted shrink-0 size-12 mt-1 md:mt-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                                        <path d="M88,96a8,8,0,0,1,8-8h64a8,8,0,0,1,0,16H96A8,8,0,0,1,88,96Zm8,40h64a8,8,0,0,0,0-16H96a8,8,0,0,0,0,16Zm32,16H96a8,8,0,0,0,0,16h32a8,8,0,0,0,0-16ZM224,48V156.69A15.86,15.86,0,0,1,219.31,168L168,219.31A15.86,15.86,0,0,1,156.69,224H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32H208A16,16,0,0,1,224,48ZM48,208H152V160a8,8,0,0,1,8-8h48V48H48Zm120-40v28.7L196.69,168Z"></path>
-                                    </svg>
-                                </div>
-                                <div className="flex flex-col justify-center overflow-hidden w-full">
-                                <p className="text-foreground text-base font-medium leading-normal whitespace-pre-wrap break-words">{note.content}</p>
-                                
-                                </div>
+            {notes.map(note => (
+                <DropdownMenu key={note._id}>
+                    <DropdownMenuTrigger asChild>
+                        <div className="flex items-center gap-4 bg-background px-4 min-h-[72px] py-2 cursor-pointer transition-colors hover:bg-accent">
+                            <div className="text-foreground flex items-center justify-center rounded-lg bg-muted shrink-0 size-12">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M88,96a8,8,0,0,1,8-8h64a8,8,0,0,1,0,16H96A8,8,0,0,1,88,96Zm8,40h64a8,8,0,0,0,0-16H96a8,8,0,0,0,0,16Zm32,16H96a8,8,0,0,0,0,16h32a8,8,0,0,0,0-16ZM224,48V156.69A15.86,15.86,0,0,1,219.31,168L168,219.31A15.86,15.86,0,0,1,156.69,224H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32H208A16,16,0,0,1,224,48ZM48,208H152V160a8,8,0,0,1,8-8h48V48H48Zm120-40v28.7L196.69,168Z"></path>
+                                </svg>
                             </div>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem onSelect={() => handleEditClick(note)}>
-                                <Pencil className="mr-2 h-4 w-4" />
-                                <span>Edit</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => handleDelete(note._id)} className="text-destructive focus:text-destructive">
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                <span>Delete</span>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                )
-            })}
+                            <div className="flex flex-col justify-center overflow-hidden w-full">
+                                <p className="text-foreground text-base font-medium leading-normal whitespace-pre-wrap break-words">{note.content}</p>
+                            </div>
+                        </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem onSelect={() => handleEditClick(note)}>
+                            <Pencil className="mr-2 h-4 w-4" />
+                            <span>Edit</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => handleDelete(note._id)} className="text-destructive focus:text-destructive">
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            <span>Delete</span>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            ))}
         </div>
       </div>
     </div>

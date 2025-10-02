@@ -94,7 +94,6 @@ export default function CryptoNotesClient() {
       });
 
       if (response.ok) {
-        toast({ title: "Success", description: "Crypto note added." });
         createForm.reset();
         fetchNotes();
       } else {
@@ -122,7 +121,6 @@ export default function CryptoNotesClient() {
       });
 
       if (response.ok) {
-        toast({ title: "Success", description: "Crypto note updated." });
         setIsEditDialogOpen(false);
         setSelectedNote(null);
         fetchNotes();
@@ -145,7 +143,6 @@ export default function CryptoNotesClient() {
       });
 
       if (response.ok) {
-        toast({ title: "Success", description: "Note deleted." });
         fetchNotes();
       } else {
         toast({ title: "Error", description: "Failed to delete note.", variant: "destructive" });

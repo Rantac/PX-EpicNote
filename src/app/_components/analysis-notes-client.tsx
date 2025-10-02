@@ -94,7 +94,6 @@ export default function AnalysisNotesClient() {
       });
 
       if (response.ok) {
-        toast({ title: "Success", description: "Analysis note created." });
         addForm.reset();
         setIsAddDialogOpen(false);
         fetchNotes(); // Re-fetch notes to get the latest list
@@ -123,7 +122,6 @@ export default function AnalysisNotesClient() {
       });
 
       if (response.ok) {
-        toast({ title: "Success", description: "Analysis note updated." });
         setIsEditDialogOpen(false);
         setSelectedNote(null);
         fetchNotes();
@@ -146,7 +144,6 @@ export default function AnalysisNotesClient() {
       });
 
       if (response.ok) {
-        toast({ title: "Success", description: "Note deleted." });
         setIsEditDialogOpen(false);
         setSelectedNote(null);
         fetchNotes();
@@ -231,9 +228,6 @@ export default function AnalysisNotesClient() {
                 const isValidDate = note.createdAt && !isNaN(new Date(note.createdAt).getTime());
                 return (
                   <div key={note._id} onClick={() => handleCardClick(note)} className="flex items-start gap-4 bg-background px-4 py-3 min-h-[72px] cursor-pointer transition-colors hover:bg-accent">
-                    <div className="text-foreground flex items-center justify-center rounded-lg bg-muted shrink-0 size-12 mt-1">
-                      <FileText size={24} />
-                    </div>
                     <div className="flex flex-col justify-center overflow-hidden w-full">
                       <h3 className="text-foreground text-base font-bold leading-normal whitespace-pre-wrap break-words">{note.title || 'Week Summary'}</h3>
                       <p className="text-sm text-foreground mt-1 whitespace-pre-wrap break-words">{note.summary}</p>
